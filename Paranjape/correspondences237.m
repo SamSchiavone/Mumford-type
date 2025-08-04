@@ -9,6 +9,7 @@ P:= C![1, 8,1];
 H := HyperellipticCurve(2*(X^7 + 7*X^5 + 14*X^3 + 7*X));
 K<nu>:= NumberFieldExtra(X^2-58);
 assert nu^2 eq 58;
+CK := ChangeRing(C,K);
 HK := ChangeRing(H,K);
 Q := HK![1,nu,1];
 matsH, mapsH := GeometricHomomorphismRepresentation(PeriodMatrix(H), PeriodMatrix(C), QQ);
