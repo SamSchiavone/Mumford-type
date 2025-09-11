@@ -1,99 +1,27 @@
-function EvaluateCoeff(f, x0 : mult := 1)
-  R := Parent(f);
-  Coeff := Coefficients(f);
-  d := #Coeff-1;
-  return &+[R!(mult*Evaluate(Coeff[i+1], x0))*(R.1)^i : i in [0..d]];
-end function;
-
-function DivisionCoeff(f, x0)
-  R := Parent(f);
-  Coeff := Coefficients(f);
-  d := #Coeff-1;
-  return &+[(Coeff[i+1] div x0)*(R.1)^i : i in [0..d]];
-end function;
-
+load "Shimura/Shimura_models.m"; 
 
 f := GenericShimuraCurve237();
-S<x> := Parent(f);
-R<t> := BaseRing(S);
-S0<y> := PolynomialRing(QQ);
+S<t, x> := Parent(f);
+S0<x0> := PolynomialRing(QQ);
 
 // fiber at 0
-g := EvaluateCoeff(f, t^2);
-g := Evaluate(g, t*x);
-g := DivisionCoeff(g, t^9);
-g := EvaluateCoeff(g, 0);
-g := Evaluate(g, y);
+f_0 := -64/567*Evaluate(Evaluate(f, [t^2, t*x]) div t^11, [0, x0]);
+// y^2 = x0^9 + 16/3*x0^7 + 32/3*x0^5 - 256/21*x0^3 + 256/81*x0
 
-g_red := S0!((1*y+1)^10*Evaluate(g, (2*y+1)/(1*y+1))); // make it a degree 10 polynomial by choosing a random transformation
-
-MinRedBinaryForm(g_red);
-// -25*x^10 - 126*x^9 - 252*x^8 - 168*x^7 + 252*x^6 + 504*x^5 + 168*x^4 - 288*x^3 - 252*x^2 - 56*x
-// gives a smooth curve
 
 // fiber at 1
-g := EvaluateCoeff(f, t+1);
-g := EvaluateCoeff(g, 0);
-g := MinRedBinaryForm(&*[l[1] : l in Factorization(Evaluate(g, y))]);
-// 2*y^4 + 3*y^3 - 3*y^2 + 4
+ell := &*[l[1] : l in Factorization(Evaluate(f, [1, x]))];
+ell := 11/7*Evaluate(S0!(x0^4*Evaluate(ell, [1, 1/x0])), x0+1);
+// y^2 = x^3 - 45/28*x + 27/28
 
-S_1<X,Y> := PolynomialRing(QQ, 2);
-
-g := S_1!(Y^4*Evaluate(g, X/Y));
-g := Evaluate(g, [X, Y-X]); // put a root at infinity
-g := Evaluate(g, [X+Y, Y]); // remove coeff in x^2
-g := Evaluate(g, [X, -1/7*Y]);
-// X^3*Y - 5/343*X*Y^3 + 2/2401*Y^4
-// j-invariant: -3375 -> potential CM by Sqrt(-7)
-
-
-
-/////
-g := EvaluateCoeff(f, t+1);
-Factorization(EvaluateCoeff(g, 0));
-
-g := Parent(g)!((-x+1)^10*Evaluate(g, 2*x/(-x+1)));
-
-Coeff := Coefficients(g);
-S_1<X,Y> := PolynomialRing(QQ, 2);
-Coeff1 := [Evaluate(c, Y) : c in Coeff];
-g := S_1!(&+[Coeff1[i]*X^(i-1) : i in [1..#Coeff]]);
-newt := NewtonPolygon(g);
-LowerSlopes(newt);
-
-// ListSignatures(Type(newt) : Isa := false);
-g := Evaluate(S_1!(Y^6*Evaluate(g, [X/Y^2, Y^7])), [X,0]);
-g := x^10*Evaluate(g, [1/x, 0]);
-// y^2 = -1152*x^7 + 3456
-
-Terms(S_1!(Y^6*Evaluate(g, [X/Y^2, Y^7])), X);
-
-
-g := Parent(g)!((-x+1)^10*Evaluate(g, 2*x/(-x+1)));
-
-[Factorization(c) : c in Coefficients(g) | c ne 0];
-
-g := EvaluateCoeff(g, t^7);
-g := Parent(g)!(t^12*Evaluate(g, x/t));
-
-
-EvaluateCoeff(g, 0);
-Factorization(EvaluateCoeff(g, 0));
-
-
+f_1 := Evaluate(f, [t+1, x]);
+f_1 := S!((x-1)^10*Evaluate(f_1, [t, 2/(x-1)]));
+f_1 := -1/1152*Evaluate(Evaluate(f_1, [t^7, t^2*x]) div t^14, [0, x0]);
+// y^2 = x^7 - 3
 
 
 // fiber at infinity
-g := EvaluateCoeff(f, 1/t : mult := t^4);
-
-Coeff := Coefficients(g);
-S_1<X,Y> := PolynomialRing(QQ, 2);
-Coeff1 := [Evaluate(c, Y) : c in Coeff];
-g := S_1!(&+[Coeff1[i]*X^(i-1) : i in [1..#Coeff]]);
-newt := NewtonPolygon(g);
-LowerSlopes(newt);
-
-g := EvaluateCoeff(g, t^3);
-g := Parent(g)!(t*Evaluate(g, x/t));
-EvaluateCoeff(g, 0);
+f_inf := Evaluate(f, [t^3, t*x]);
+Coeffs := Terms(f_inf, t);
+f_inf := Evaluate(Coeffs[#Coeffs] div t^16, [0, x0]);
 // y^2 = x^10 - 84*x^7 + 84*x^4 - 28*x

@@ -1,13 +1,11 @@
 function GenericShimuraCurve237()
-  K<t> := PolynomialRing(QQ);
-  S<x> := PolynomialRing(K);
-  f := (t - 27/16)*x^10 - 567/64*x^9 - 189/4*t*x^8 + (-84*t^2 - 189/4*t)*x^7 - 189*t^2*x^6 - 189/2*t^2*x^5 + 84*t^3*x^4 + 108*t^3*x^3 - 28*t^4*x;
+  K<t, x> := PolynomialRing(QQ, 2);
+  f := t*((t - 27/16)*x^10 - 567/64*x^9 - 189/4*t*x^8 + (-84*t^2 - 189/4*t)*x^7 - 189*t^2*x^6 - 189/2*t^2*x^5 + 84*t^3*x^4 + 108*t^3*x^3 - 28*t^4*x);
   return f;
 end function;
 
 function GenericShimuraCurve239()
-  K<t> := PolynomialRing(QQ);
-  S<X,Y,Z,T> := PolynomialRing(K, 4);
+  S<t, X, Y, Z, T> := PolynomialRing(QQ, 5);
   Q := X*Z - Y^2;
   E := 3*T^3 + t*(t - 1)*(3*T*(5*X^2 + 6*X*Y + 2*t*Y*Z + 3*t*Z^2) + (-2*t + 9)*X^3 + 22*t*X^2*Y + 21*t*X^2*Z + (-14*t^2 + 18*t)*X*Y*Z + t^2*X*Z^2 + 6*t^2*Y*Z^2 + (-3*t^3 + 6*t^2)*Z^3);
   return Q, E;
@@ -16,14 +14,13 @@ end function;
 function GetShimuraCurve237(param)
   f := GenericShimuraCurve237();
   S<x> := PolynomialRing(Parent(param));
-  return &+[Evaluate(c, param)*x^(i-1) : i->c in Coefficients(f)];
+  return Evaluate(f, [param, x]);
 end function;
 
 function GetShimuraCurve239(param)
   Q, E := GenericShimuraCurve239();
-  S<X,Y,Z,T> := PolynomialRing(Parent(param), 4);
-  Coeff, Mon := CoefficientsAndMonomials(E);
-  return S!Q, Polynomial([Evaluate(c, param) : c in Coefficients(E)], ChangeUniverse(Mon, S));
+  S<X, Y, Z, T> := PolynomialRing(Parent(param), 4);
+  return S!Q, Evaluate(E, [param, X, Y, Z, T]);
 end function;
 
 // Shimura curves
