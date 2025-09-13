@@ -1,100 +1,62 @@
-function GenericShimuraCurve237()
-  K<t, x> := PolynomialRing(QQ, 2);
-  f := t*((t - 27/16)*x^10 - 567/64*x^9 - 189/4*t*x^8 + (-84*t^2 - 189/4*t)*x^7 - 189*t^2*x^6 - 189/2*t^2*x^5 + 84*t^3*x^4 + 108*t^3*x^3 - 28*t^4*x);
-  return f;
+K<t> := PolynomialRing(Rationals());
+R<X, Y, Z> := PolynomialRing(FieldOfFractions(K), 3);
+
+function rec_invs(I) // caution: here I contains only the invariants of even weight
+  /* with the covariants
+  q1 := Transvectant(f, Transvectant(f, f, 4), 4);
+  q2 := Transvectant(q1, Transvectant(f, f, 4), 2);
+  q3 := Transvectant(q2, Transvectant(f, f, 4), 2);
+  */
+  
+  a11 := I[3];
+  a12 := 1/3*(-1/3*I[1]^2*I[2] + I[1]*I[3] + 2*I[2]^2);
+  a13 := 1/54*I[1]^3*I[2] - 1/18*I[1]^2*I[3] - 1/9*I[1]*I[2]^2 + 1/3*I[2]*I[3] + 1/2*I[4];
+  a22 := 1/54*I[1]^3*I[2] - 1/18*I[1]^2*I[3] - 1/9*I[1]*I[2]^2 + 1/3*I[2]*I[3] + 1/2*I[4];
+  a23 := 1/3*(-1/6*I[1]^2*I[2]^2 + 1/3*I[1]*I[2]*I[3] + I[2]^3 + 1/2*I[3]^2);
+  a33 := 1/2*(5/162*I[1]^3*I[2]^2 - 7/54*I[1]^2*I[2]*I[3] - 5/27*I[1]*I[2]^3 + 1/9*I[1]*I[3]^2 + 5/9*I[2]^2*I[3] + 1/2*I[2]*I[4]);
+
+  v11 := I[17];
+  v12 := I[26];
+  v13 := -1/18*I[1]^2*I[2]*I[7] + 1/12*I[1]*I[3]*I[7] + 1/3*I[2]^2*I[7] + 1/4*I[2]*I[17] + 1/4*I[3]*I[10] - 1/2*I[30];
+  v22 := I[30];
+  v23 := 1/54*I[1]^3*I[2]*I[7] - 1/36*I[1]^2*I[2]*I[10] - 1/18*I[1]^2*I[3]*I[7] -
+          1/9*I[1]*I[2]^2*I[7] + 1/36*I[1]*I[2]*I[17] + 1/12*I[1]*I[3]*I[10] +
+          1/6*I[2]^2*I[10] + 1/6*I[2]*I[3]*I[7] - 1/12*I[3]*I[17] + 1/4*I[4]*I[7];
+  v33 := -1/324*I[1]^4*I[2]*I[7] + 1/108*I[1]^3*I[2]*I[10] + 1/108*I[1]^3*I[3]*I[7] -
+          1/27*I[1]^2*I[2]^2*I[7] - 1/36*I[1]^2*I[3]*I[10] - 1/18*I[1]*I[2]^2*I[10] +
+          1/18*I[1]*I[2]*I[3]*I[7] + 1/9*I[1]*I[2]*I[26] - 1/12*I[1]*I[4]*I[7] +
+          1/3*I[2]^3*I[7] + 1/6*I[2]*I[3]*I[10] - 1/2*I[2]*I[30] + 1/6*I[3]^2*I[7] -
+          1/3*I[3]*I[26] + 1/4*I[4]*I[10];
+
+  f111 := I[4];
+  f112 := 1/3*(1/54*I[1]^4*I[2] - 1/18*I[1]^3*I[3] - 2/9*I[1]^2*I[2]^2 + 1/3*I[1]*I[2]*I[3] + 1/2*I[1]*I[4] + 2/3*I[2]^3 + I[3]^2);
+  f113 := 1/3*(-1/6*I[1]^2*I[2]*I[3] + 1/2*I[1]*I[3]^2 + I[2]^2*I[3] + 1/2*I[2]*I[4]);
+  f122 := 1/3*(-1/6*I[1]^2*I[2]*I[3] + 1/2*I[1]*I[3]^2 + I[2]^2*I[3] + 1/2*I[2]*I[4]);
+  f123 := 1/3*(1/108*I[1]^4*I[2]^2 - 1/36*I[1]^3*I[2]*I[3] - 1/9*I[1]^2*I[2]^3 + 1/6*I[1]*I[2]^2*I[3] + 1/12*I[1]*I[2]*I[4] +
+          1/3*I[2]^4 + 1/2*I[2]*I[3]^2 + 1/2*I[3]*I[4]);
+  f133 := 1/3*(-1/972*I[1]^5*I[2]^2 + 1/162*I[1]^4*I[2]*I[3] + 1/81*I[1]^3*I[2]^3 - 1/108*I[1]^3*I[3]^2 - 5/36*I[1]^2*I[2]^2*I[3]
+            - 1/36*I[1]^2*I[2]*I[4] - 1/27*I[1]*I[2]^4 + 1/4*I[1]*I[2]*I[3]^2 + 1/12*I[1]*I[3]*I[4] + 11/18*I[2]^3*I[3] +
+          1/4*I[2]^2*I[4] + 1/6*I[3]^3);
+  f222 := 1/3*(1/36*I[1]^4*I[2]^2 - 1/6*I[1]^3*I[2]*I[3] - 1/3*I[1]^2*I[2]^3 + 1/4*I[1]^2*I[3]^2 + I[1]*I[2]^2*I[3] +
+            1/12*I[1]*I[2]*I[4] + I[2]^4 - 1/4*I[3]*I[4]);
+  f223 := -1/729*I[1]^5*I[2]^2 + 2/243*I[1]^4*I[2]*I[3] + 4/243*I[1]^3*I[2]^3 - 1/81*I[1]^3*I[3]^2 - 2/27*I[1]^2*I[2]^2*I[3]
+          - 1/27*I[1]^2*I[2]*I[4] - 4/81*I[1]*I[2]^4 + 1/12*I[1]*I[2]*I[3]^2 + 1/9*I[1]*I[3]*I[4] + 4/27*I[2]^3*I[3] +
+          1/4*I[2]^2*I[4] - 1/36*I[3]^3;
+  f233 := 1/5832*I[1]^6*I[2]^2 - 1/972*I[1]^5*I[2]*I[3] - 1/1944*I[1]^4*I[2]^3 + 1/648*I[1]^4*I[3]^2 +
+          1/324*I[1]^3*I[2]^2*I[3] + 1/108*I[1]^3*I[2]*I[4] - 1/81*I[1]^2*I[2]^4 - 1/216*I[1]^2*I[2]*I[3]^2 -
+          1/36*I[1]^2*I[3]*I[4] + 1/54*I[1]*I[2]^3*I[3] - 11/216*I[1]*I[2]^2*I[4] + 1/18*I[2]^5 + 1/18*I[2]^2*I[3]^2 +
+          11/72*I[2]*I[3]*I[4] + 1/8*I[4]^2;
+  f333 := -1/1944*I[1]^5*I[2]^3 + 1/648*I[1]^4*I[2]^2*I[3] + 1/162*I[1]^3*I[2]^4 + 1/216*I[1]^3*I[2]*I[3]^2 -
+          1/54*I[1]^2*I[2]^3*I[3] - 13/648*I[1]^2*I[2]^2*I[4] - 1/72*I[1]^2*I[3]^3 - 1/54*I[1]*I[2]^5 -
+          1/72*I[1]*I[2]^2*I[3]^2 + 1/27*I[1]*I[2]*I[3]*I[4] + 1/18*I[2]^4*I[3] + 1/8*I[2]^3*I[4] + 1/24*I[2]*I[3]^3 +
+          5/72*I[3]^2*I[4];
+  res := [a11,a12,a13,a22,a23,a33,v11,v12,v13,v22,v23,v33,f111,f112,f113,f122,f123,f133,f222,f223,f233,f333];
+  wgt := [18,24,30,30,36,42, 20,26,32,32,38,44, 30,36,42,42,48,54,48,54,60,66];
+  
+  return res, wgt;
 end function;
 
-function GenericShimuraCurve239()
-  S<t, X, Y, Z, T> := PolynomialRing(QQ, 5);
-  Q := X*Z - Y^2;
-  E := 3*T^3 + t*(t - 1)*(3*T*(5*X^2 + 6*X*Y + 2*t*Y*Z + 3*t*Z^2) + (-2*t + 9)*X^3 + 22*t*X^2*Y + 21*t*X^2*Z + (-14*t^2 + 18*t)*X*Y*Z + t^2*X*Z^2 + 6*t^2*Y*Z^2 + (-3*t^3 + 6*t^2)*Z^3);
-  return Q, E;
-end function;
-
-function GetShimuraCurve237(param)
-  f := GenericShimuraCurve237();
-  S<x> := PolynomialRing(Parent(param));
-  return Evaluate(f, [param, x]);
-end function;
-
-function GetShimuraCurve239(param)
-  Q, E := GenericShimuraCurve239();
-  S<X, Y, Z, T> := PolynomialRing(Parent(param), 4);
-  return S!Q, Evaluate(E, [param, X, Y, Z, T]);
-end function;
-
-// Shimura curves
-function IsOnShimura237(f : epsilon := Precision(BaseRing(Parent(f))) div 2)
-    invs_f, wgt := InvariantsGenus4Curves(f);
-    wgt_even := [w : w in wgt | w mod 2 eq 0];
-    invs_even := [inv : i->inv in invs_f | wgt[i] mod 2 eq 0]; 
-    invs_norm := Normalize(invs_even, wgt_even);
-    mu := invs_norm[4];
-    invs_shim := 
-    [0,
-    0,
-    8/225*mu,
-    mu,
-    9555/1552661*mu,
-    -136/7425*mu,
-    -136/7425*mu,
-    22321/1111320*mu,
-    41905/373527*mu,
-    -1088/121275*mu,
-    32453/271656*mu,
-    9378917/16180819200*mu,
-    -80580799/82771113600*mu,
-    3965075087/373776923520*mu,
-    -10106041/343429632000*mu,
-    6679079/135136512000*mu,
-    8415/33575584*mu,
-    6432239/92989769600*mu,
-    2964307/10679340672*mu,
-    799098587/649689064113375*mu^2,
-    -35403551/965268798243750*mu^2,
-    -737872919/3467287952689275*mu^2,
-    104367704/1449535097278125*mu^2 - 27781896571/2628148399027200*mu,
-    202166944/543307229053875*mu^2 - 47535787/533045971584*mu,
-    24971192/1353269001459375*mu^2 - 1527999253/419581586511360*mu,
-    -13955952/19843977993125*mu^2 + 82387485713/827109665907840*mu,
-    -33747224/55202338780875*mu^2 - 6182478247/708951142206720*mu,
-    45834047/222225660421875*mu^2 - 38197116529/1618258041993600*mu,
-    88783492/83293469758125*mu^2 - 91289913/875248323712*mu,
-    -112232344/6243925288535*mu^2 + 8403525/51353855728*mu,
-    59920516/113310063813375*mu^2 - 146795/4506427296*mu,
-    -61538022538343/300181687280798400000*mu^2 + 21026458789611847/4307290703943769350144*mu,
-    419176166767579/550333093348130400000*mu^2 - 2817979013040763/89735222998828528128*mu,
-    17360603883629/83274086493467100000*mu^2 + 1125455259401629/27156712223329686144*mu,
-    92179526694239/150090843640399200000*mu^2 - 52350137286370495/2153645351971884675072*mu,
-    1397787163426537/1284110551145637600000*mu^2 - 8124306944780585/209382186997266565632*mu,
-    1918564676253251/22623693164729506080000*mu^2 - 57104093245637555/11934784658844194241024*mu,
-    36255126482249/431511175466147700000*mu^2 + 88287259051679129/24766921547676673763328*mu,
-    1096637001599/35086171240612800000*mu^2 + 402739710504703/1926241805490381324288*mu,
-    -5117181688447/64324647274456800000*mu^2 - 53975425119187/40130037614382944256*mu,
-    -20211972884261/126533352204359100000*mu^2 + 21556912169221/12144616646457996288*mu,
-    -15266198370251/228060113063983200000*mu^2 - 1002711837811255/963120902745190662144*mu,
-    -19578822922741/150090843640399200000*mu^2 - 155612557479665/93636754433560203264*mu,
-    -9230069858983/327836412529475850000*mu^2 + 1691049620266721/11075890381569692614656*mu,
-    169805623/20391829387776000*mu^2,
-    -89401/105931581235200*mu^2,
-    237610238567/1567601492355892224000*mu^2,
-    -1524484215210463/6342919314726500352000*mu^2,
-    -7661196259085981/74138017964335718400000*mu^2,
-    -7753465235717563/14684835500764910910000000*mu^3 + 960201643633802107/1494684528918996602880000*mu^2];
-    RealField(10)!Max([Abs(invs_shim[i]-invs_norm[i]) : i in [1..#invs_shim]]);
-    return Max([Abs(invs_shim[i]-invs_norm[i]) : i in [1..#invs_shim]]) lt epsilon;
-end function;
-
-
-function IsOnShimura239(Q, E : epsilon := Precision(BaseRing(Parent(Q))) div 2)
-    invs, wgt := InvariantsGenus4Curves(Q, E);
-    wgt_even := [w : w in wgt | w mod 2 eq 0];
-    invs_even := [inv : i->inv in invs | wgt[i] mod 2 eq 0]; 
-    invs_norm := WPSMultiply([w div 2 : w in wgt_even], invs_even, invs[6]/invs[1]);
-    a := invs[7]/invs[1];
-    t := (918*a-3645)/(22*a+675);
-    //invs_norm := WPSMultiply([w div 2 : w in wgt_even], invs_norm, t - 459/11);
-    invs_shim := [27993600/121*t/(t^2 - 918/11*t + 210681/121),
+invs_norm := [27993600/121*t/(t^2 - 918/11*t + 210681/121),
     (1285255879616102400/1771561*t^4 - 20727258712060723200/1771561*t^3 + 47773803616822886400/1771561*t^2)/(t^6 - 2754/11*t^5 + 3160215/121*t^4 - 1934051580/1331*t^3 + 665797256415/14641*t^2 - 122240376277794/161051*t + 9351388785251241/1771561),
     (-1057780806353666929852416000/2357947691*t^7 - 69036562852747652578148352000/2357947691*t^6 + 142262971116616290360360960000/2357947691*t^5 - 23530271027395257484443648000/2357947691*t^4 - 64995732397895607222534144000/2357947691*t^3)/(t^10 - 4142/11*t^9 + 7629957/121*t^8 - 8206446312/1331*t^7 + 5682050136882/14641*t^6 - 2628567568326420/161051*t^5 + 813754184881274658/1771561*t^4 - 163163031525063652968/19487171*t^3 + 19431185297152056915213/214358881*t^2 - 1099349246891358321457518/2357947691*t + 904303412765472167650539/2357947691),
     (-805843923808602836433716828482041387417600000/4177248169415651*t^11 + 330466556219295694843070748382895149783449600000/4177248169415651*t^10 - 4511869205136927938289898451556156202549248000000/4177248169415651*t^9 + 12831626221377215408076540043158250019880960000000/4177248169415651*t^8 - 12621209594760747749272853342527540357496832000000/4177248169415651*t^7 + 4065845087742705548097826707107678435829350400000/4177248169415651*t^6 - 499032860706745331041074389321865507530342400000/4177248169415651*t^5)/(t^16 - 6896/11*t^15 + 22197240/121*t^14 - 44243010000/1331*t^13 + 61071546741660/14641*t^12 - 5622524670973392/14641*t^11 + 4316063205616350552/161051*t^10 - 2557791860541919438320/1771561*t^9 + 1180164435045716379244050/19487171*t^8 - 424136032026472436278448880/214358881*t^7 + 117841586324294209110877038168/2357947691*t^6 - 273770363348061698522875194582768/285311670611*t^5 + 42649705859662029010778048732227740/3138428376721*t^4 - 4652258721727486616672862576532309200/34522712143931*t^3 + 322716343915681344186181675525033319160/379749833583241*t^2 - 11496408502357436303038483927509694420464/4177248169415651*t + 8456492792599460357523500196677804068899/4177248169415651),
@@ -124,77 +86,197 @@ function IsOnShimura239(Q, E : epsilon := Precision(BaseRing(Parent(Q))) div 2)
     (3435704089157623298674630166839296000000/241658985007517*t^9 - 32075622166822775513198583764484096000000/241658985007517*t^8 + 108503017346437906628919387544879104000000/241658985007517*t^7 + 12155017095088907407587665529274368000000/241658985007517*t^6 - 34397503059512497559180009703211008000000/21968998637047*t^5 + 41049069323563074122195376210444288000000/34522712143931*t^4)/(t^13 - 5519/11*t^12 + 1269594/11*t^11 - 1947956526/121*t^10 + 2018666336625/1331*t^9 - 1488855824795223/14641*t^8 + 801652387629773052/161051*t^7 - 317685379812555159252/1771561*t^6 + 92056688992273064868693/19487171*t^5 - 19061297425938874122045675/214358881*t^4 + 2689398349564514226592702986/2357947691*t^3 - 2587579211107598653348258197834/285311670611*t^2 + 112597052457161883075894875371869/3138428376721*t - 87448472212922680764527492040081/3138428376721),
     (582372713388705834068775321734199273062400000/2658248835082687*t^10 - 9010300535910379644588076174932183928012800000/2658248835082687*t^9 + 43191557060876923363913817426678891990220800000/2658248835082687*t^8 - 8416903160213464422998506644179476335820800000/241658985007517*t^7 + 95984283910804313363521355900963831729356800000/2658248835082687*t^6 - 5715402371845494896849459550663036056371200000/379749833583241*t^5)/(t^15 - 6437/11*t^14 + 19242657/121*t^13 - 35410630437/1331*t^12 + 4074369761007/1331*t^11 - 3752388950671179/14641*t^10 + 2593716677258279391/161051*t^9 - 1367275905680369197851/1771561*t^8 + 552584794338426917430441/19487171*t^7 - 170499611425134481177876461/214358881*t^6 + 39582264680157482250231742569/2357947691*t^5 - 73919508977946570641455126351887/285311670611*t^4 + 8720651238784553086350145736711607/3138428376721*t^3 - 649479803125376750038145683381681587/34522712143931*t^2 + 24605114281133415918672806852841470727/379749833583241*t - 18423731574290763306151416550496305161/379749833583241),
     (140940263391074395218206939906943222716301312000000/45949729863572161*t^11 - 2599030564698320362462272653038911943568523264000000/45949729863572161*t^10 + 15767451507715639569656343493838275127053123584000000/45949729863572161*t^9 - 34024271079698808906946170720438317679183396864000000/45949729863572161*t^8 + 28109121018390638965981440222023625507921199104000000/45949729863572161*t^7 - 6553225596006800910145308721405949420368822272000000/45949729863572161*t^6)/(t^17 - 7355/11*t^16 + 25362504/121*t^15 - 54431543160/1331*t^14 + 81379088331660/14641*t^13 - 89879611335129252/161051*t^12 + 6896802029593137480/161051*t^11 - 4538864871919824341688/1771561*t^10 + 2354190899034457401432930/19487171*t^9 - 965831507712456254351467830/214358881*t^8 + 312520025024445057362685074088/2357947691*t^7 - 868752532699423160323693360293000/285311670611*t^6 + 168310302636422348632777763045718252/3138428376721*t^5 - 24228473711312357932619986944624841860/34522712143931*t^4 + 2458103097188597701239025598153363241960/379749833583241*t^3 - 159623210359655173284495872993499987914904/4177248169415651*t^2 + 5369872923300657327027422624890405583750865/45949729863572161*t - 3881530191803152304103286590275112067624641/45949729863572161)];
-    RealField(10)!Max([Abs(invs_shim[i]-invs_norm[i]) : i in [1..#invs_shim]]);
-    return Max([Abs(invs_shim[i]-invs_norm[i]) : i in [1..#invs_shim]]) lt epsilon;
-end function;
 
-function GetParam237(f)
-  c3 := Transvectant(f, f, 8);
-  c4 := Transvectant(f, f, 6);
-  c5 := Transvectant(f, f, 4);
-  c6 := Transvectant(f, f, 2);
-  c7 := Transvectant(c4, f, 8);
-  c9 := Transvectant(c5, f, 8);
-  c12 := Transvectant(c6, f, 7);
-  c22 := Transvectant(c12, f, 9);
+invs_rec := rec_invs(invs_norm);
 
-  i4 := Transvectant(c7, c7, 2);
-  i6 := Transvectant(c3*c9, f, 10);
-  i7 := Transvectant(c9*c22, f, 10);
-  param := 1-Evaluate(i4*(i6/i7)^3, [0,0])*3794886144/359165724775;
-  
-  //FIXME do over exact fields also
-  m0 := MinimalPolynomial(Real(param), 15);
-  m1, base_chg := Polredbest(m0);
-  
-  K<mu0> := NumberField(m1);
-  param1 := K!base_chg;
-  m2, base_chg := Polredabs(m1);
-  L<mu> := NumberField(m2);
-  
-  return Evaluate(PolynomialRing(L)!Flat(param1), L!base_chg);
-end function;
+Q := invs_rec[1]*X^2 + 2*invs_rec[2]*X*Y + 2*invs_rec[3]*X*Z + invs_rec[4]*Y^2 + 2*invs_rec[5]*Y*Z + invs_rec[6]*Z^2;
+V := (invs_rec[7]*X^2 + 2*invs_rec[8]*X*Y + 2*invs_rec[9]*X*Z + invs_rec[10]*Y^2 + 2*invs_rec[11]*Y*Z + invs_rec[12]*Z^2);
+F := (invs_rec[13]*X^3 + 3*invs_rec[14]*X^2*Y + 3*invs_rec[15]*X^2*Z + 3*invs_rec[16]*X*Y^2 + 6*invs_rec[17]*X*Y*Z + 3*invs_rec[18]*X*Z^2 + invs_rec[19]*Y^3 + 3*invs_rec[20]*Y^2*Z + 3*invs_rec[21]*Y*Z^2 + invs_rec[22]*Z^3);
 
-function GetParam239(Q, E)
-  invs, wgt := InvariantsGenus4Curves(Q, E);
-  a := invs[7]/invs[1];
-  param := (918*a-3645)/(22*a+675);
+Con := Conic(Proj(R), Q);
+param := Parametrization(Con);
 
-  //FIXME do over exact fields also
-  m0 := MinimalPolynomial(Real(param), 21);
-  m1, base_chg := Polredbest(m0);
-  
-  K<mu0> := NumberField(m1);
-  param1 := K!base_chg;
-  m2, base_chg := Polredabs(m1);
-  L<mu> := NumberField(m2);
-  
-  return Evaluate(PolynomialRing(L)!Flat(param1), L!base_chg);
-end function;
+f := F @@ param;
+v := V @@ param;
 
-function GetCurves237()
-  R<x> := PolynomialRing(QQ);
-  str := Read("Shimura/Shimura_237_param.m"); // assumes in Mumford-type directory
-  str := Split(str, "\n");
-  list_str := [Split(l, "|") : l in str];
-  list_curves := [**];
-  for l in list_str do
-    K<mu> := NumberField(eval l[2]);
-    Append(~list_curves, HyperellipticCurve(GetShimuraCurve237(eval l[3])));
-  end for;
-  return list_curves;
-end function;
+//Factorization(GCD(K!Numerator(Evaluate(Discriminant(f, 1), [1,1])), K!Numerator(Evaluate(Discriminant(v, 1), [1,1]))));
 
-function GetCurves239()
-  R<x> := PolynomialRing(QQ);
-  str := Read("Shimura/Shimura_239_param.m"); // assumes in Mumford-type directory
-  str := Split(str, "\n");
-  list_str := [Split(l, "|") : l in str];
-  list_curves := [**];
-  for l in list_str do
-    K<mu> := NumberField(eval l[2]);
-    Q, E := GetShimuraCurve239(eval l[3]);
-    Append(~list_curves, Curve(Proj(Parent(Q)), [Q, E]));
-  end for;
-  return list_curves;
-end function;
+S1<u1, u2> := PolynomialRing(Rationals(), 2);
+S<x,y> := Parent(f);
+
+
+mu := (t-459/11)^26*(t^4 + 23950436/131285*t^3 - 112047786/131285*t^2 + 168512724/131285*t - 11160261/18755)*(t^8 + 796706234699992/1359174306105*t^7 - 1574520814490884/151019367345*t^6 + 1114764540714024/16779929705*t^5 - 101454642307278/479426563*t^4 + 6334525284686568/16779929705*t^3 - 6448996691805348/16779929705*t^2 + 3502508162873112/16779929705*t - 16035721460199/342447545)*(t-1)^3/(t^7*(t^8 - 16186630014472/347576333769*t^7 + 15990372708956/38619592641*t^6 - 20266439682472/12873197547*t^5 + 224796967686/75281857*t^4 - 3930974808552/1430355283*t^3 + 1099006052436/1430355283*t^2 + 683122764456/1430355283*t - 56950811883/204336469));
+
+f *:= mu^3;
+v *:= mu^2;
+
+f /:= t-1;
+v /:= t-1;
+
+// minimize at t^4 + 23950436/131285*t^3 - 112047786/131285*t^2 + 168512724/131285*t - 11160261/18755
+L<a> := NumberField(t^4 + 23950436/131285*t^3 - 112047786/131285*t^2 + 168512724/131285*t - 11160261/18755);
+NbXY := PolynomialRing(L, 2);
+
+Coeff, Mon := CoefficientsAndMonomials(v);
+v1 := Polynomial([Evaluate(K!c, a) : c in Coeff], ChangeUniverse(Mon, NbXY));
+
+c1 := Coefficients(v1)[1];
+c2 := Coefficients(v1)[2];
+
+Evaluate(v1, [NbXY.1-1/4*(c2/c1)*NbXY.2, NbXY.2]); // only one monomial remains so we can minimize
+
+mu := 1/13192620697533859457193216*(6767906377769550257777225*t^3 + 1246642706110454814379465685*t^2 - 3727851705060140005523930565*t + 2974681326965332115103478695);
+fact := t^4 + 23950436/131285*t^3 - 112047786/131285*t^2 + 168512724/131285*t - 11160261/18755;
+
+v := 1/fact^4*Evaluate(v, [fact*x-mu*y, y]);
+f := 1/fact^6*Evaluate(f, [fact*x-mu*y, y]);
+
+// minimize at t^8 + 796706234699992/1359174306105*t^7 - 1574520814490884/151019367345*t^6 + 1114764540714024/16779929705*t^5 - 101454642307278/479426563*t^4 + 6334525284686568/16779929705*t^3 - 6448996691805348/16779929705*t^2 + 3502508162873112/16779929705*t - 16035721460199/342447545
+L<a> := NumberField(t^8 + 796706234699992/1359174306105*t^7 - 1574520814490884/151019367345*t^6 + 1114764540714024/16779929705*t^5 - 101454642307278/479426563*t^4 + 6334525284686568/16779929705*t^3 - 6448996691805348/16779929705*t^2 + 3502508162873112/16779929705*t - 16035721460199/342447545);
+NbXY := PolynomialRing(L, 2);
+
+Coeff, Mon := CoefficientsAndMonomials(v);
+v1 := Polynomial([Evaluate(K!c, a) : c in Coeff], ChangeUniverse(Mon, NbXY));
+
+c1 := Coefficients(v1)[1];
+c2 := Coefficients(v1)[2];
+
+Evaluate(v1, [NbXY.1-1/4*(c2/c1)*NbXY.2, NbXY.2]); // only one monomial remains so we can try to minimize
+
+mu := 1/530322866343922578241387033592163919505955912661418134117738471078133269915042746878457085175570335848850919553970257002496*(-2776026155568216664984132796907108931359671167785913363556696243714147573931635954644102927565135925630395186359494945375*t^7 - 1630512080361376932826270903163159189492122127452490972315948763019441953229641304702122657500761274459476768066224603616775*t^6 + 27010368529127239965656522116170627952968953458692936503963948768817660735148138162486672126034691432682755035184091346299125*t^5 - 152097616845223024796451237249125144466139069923504247393541756034449591229164874054980973820853500554260935325534622814738275*t^4 + 402517841997312596077099496377634142038964677916005825176864109068712685970909910081157026173296437336263568569090460592588675*t^3 - 548820906038015084843225067856261464959456323674459395016415648391587741026247045672948762253190444129128284706397343938731925*t^2 + 371496514900228716898526240733706961612083203760420071081322488367740015853233495323366427844323006874245468088583466438452775*t - 97337629132377172573296791224382770380781642191244893432162511160908378542565617329265008030222654964556809599023398241673025);
+fact := t^8 + 796706234699992/1359174306105*t^7 - 1574520814490884/151019367345*t^6 + 1114764540714024/16779929705*t^5 - 101454642307278/479426563*t^4 + 6334525284686568/16779929705*t^3 - 6448996691805348/16779929705*t^2 + 3502508162873112/16779929705*t - 16035721460199/342447545;
+
+v := 1/fact^4*Evaluate(v, [fact*x-mu*y, y]);
+f := 1/fact^6*Evaluate(f, [fact*x-mu*y, y]);
+
+// minimize at t - 459/11
+f := 1/(t-459/11)^18*Evaluate(f, [x, (t-459/11)^3*y]);
+v := 1/(t-459/11)^12*Evaluate(v, [x, (t-459/11)^3*y]);
+
+// minimize at t
+Coef := Coefficients(v);
+_, Mat := MinRedBinaryForm(&+[Evaluate(c, 0)*u1^(5-i)*u2^(i-1) : i->c in Coef]); 
+
+f := 1/t^6*Evaluate(f^ChangeRing(Mat, FieldOfFractions(K)), [t*x, y]);
+v := 1/t^4*Evaluate(v^ChangeRing(Mat, FieldOfFractions(K)), [t*x, y]);
+
+
+Coef := Coefficients(v);
+_, Mat := MinRedBinaryForm(&+[Evaluate(c, 0)*u1^(5-i)*u2^(i-1) : i->c in Coef]); 
+
+f := 1/t^3*Evaluate(f^ChangeRing(Mat, FieldOfFractions(K)), [t*x, y]);
+v := 1/t^2*Evaluate(v^ChangeRing(Mat, FieldOfFractions(K)), [t*x, y]);
+
+f /:= t;
+v /:= t;
+
+// we reduce the degree of t in f and v
+test := &+[(LeadingCoefficient(K!Coefficients(v)[i]))*u1^(4-i+1)*u2^(i-1) : i in [1..#Coefficients(v)]];
+_, Mat := MinRedBinaryForm(test);
+
+v := v^ChangeRing(Mat, FieldOfFractions(K));
+f := f^ChangeRing(Mat, FieldOfFractions(K));
+
+[Degree(K!s) : s in Coefficients(v)];
+[Degree(K!s) : s in Coefficients(f)];
+
+// we reduce the degree of t in f and v
+f := Evaluate(f, [x, y-1/4*LeadingCoefficient(K!Coefficients(v)[4])/LeadingCoefficient(K!Coefficients(v)[5])*t*x]);
+v := Evaluate(v, [x, y-1/4*LeadingCoefficient(K!Coefficients(v)[4])/LeadingCoefficient(K!Coefficients(v)[5])*t*x]);
+
+test := &+[(LeadingCoefficient(K!Coefficients(v)[i]))*u1^(4-i+1)*u2^(i-1) : i in [1..#Coefficients(v)]];
+_, Mat := MinRedBinaryForm(test);
+
+v := v^ChangeRing(Mat, FieldOfFractions(K));
+f := f^ChangeRing(Mat, FieldOfFractions(K));
+
+[Degree(K!s) : s in Coefficients(v)];
+[Degree(K!s) : s in Coefficients(f)];
+
+// we reduce the degree of t in f and v
+f := Evaluate(f, [x, y-1/4*LeadingCoefficient(K!Coefficients(v)[4])/LeadingCoefficient(K!Coefficients(v)[5])*t*x]);
+v := Evaluate(v, [x, y-1/4*LeadingCoefficient(K!Coefficients(v)[4])/LeadingCoefficient(K!Coefficients(v)[5])*t*x]);
+
+test := &+[(LeadingCoefficient(K!Coefficients(v)[i]))*u1^(4-i+1)*u2^(i-1) : i in [1..#Coefficients(v)]];
+_, Mat := MinRedBinaryForm(test);
+
+v := v^ChangeRing(Mat, FieldOfFractions(K));
+f := f^ChangeRing(Mat, FieldOfFractions(K));
+
+[Degree(K!s) : s in Coefficients(v)];
+[Degree(K!s) : s in Coefficients(f)];
+
+// we reduce the degree of t in f and v
+f := Evaluate(f, [x, y-1/4*LeadingCoefficient(K!Coefficients(v)[4])/LeadingCoefficient(K!Coefficients(v)[5])*t*x]);
+v := Evaluate(v, [x, y-1/4*LeadingCoefficient(K!Coefficients(v)[4])/LeadingCoefficient(K!Coefficients(v)[5])*t*x]);
+
+test := &+[(LeadingCoefficient(K!Coefficients(v)[i]))*u1^(4-i+1)*u2^(i-1) : i in [1..#Coefficients(v)]];
+_, Mat := MinRedBinaryForm(test);
+
+v := v^ChangeRing(Mat, FieldOfFractions(K));
+f := f^ChangeRing(Mat, FieldOfFractions(K));
+
+[Degree(K!s) : s in Coefficients(v)];
+[Degree(K!s) : s in Coefficients(f)];
+
+// we reduce the degree of t in f and v
+f := Evaluate(f, [x, y-1/4*LeadingCoefficient(K!Coefficients(v)[4])/LeadingCoefficient(K!Coefficients(v)[5])*t*x]);
+v := Evaluate(v, [x, y-1/4*LeadingCoefficient(K!Coefficients(v)[4])/LeadingCoefficient(K!Coefficients(v)[5])*t*x]);
+
+test := &+[(LeadingCoefficient(K!Coefficients(v)[i]))*u1^(4-i+1)*u2^(i-1) : i in [1..#Coefficients(v)]];
+_, Mat := MinRedBinaryForm(test);
+
+v := v^ChangeRing(Mat, FieldOfFractions(K));
+f := f^ChangeRing(Mat, FieldOfFractions(K));
+
+[Degree(K!s) : s in Coefficients(v)];
+[Degree(K!s) : s in Coefficients(f)];
+
+
+// we reduce the degree of t in f and v
+f := Evaluate(f, [x, y-1/4*LeadingCoefficient(K!Coefficients(v)[4])/LeadingCoefficient(K!Coefficients(v)[5])*t*x]);
+v := Evaluate(v, [x, y-1/4*LeadingCoefficient(K!Coefficients(v)[4])/LeadingCoefficient(K!Coefficients(v)[5])*t*x]);
+
+test := &+[(LeadingCoefficient(K!Coefficients(v)[i]))*u1^(4-i+1)*u2^(i-1) : i in [1..#Coefficients(v)]];
+_, Mat := MinRedBinaryForm(test);
+
+v := v^ChangeRing(Mat, FieldOfFractions(K));
+f := f^ChangeRing(Mat, FieldOfFractions(K));
+
+[Degree(K!s) : s in Coefficients(v)];
+[Degree(K!s) : s in Coefficients(f)];
+
+
+// we reduce the degree of t in f and v
+f := Evaluate(f, [x, y-1/4*LeadingCoefficient(K!Coefficients(v)[4])/LeadingCoefficient(K!Coefficients(v)[5])*t*x]);
+v := Evaluate(v, [x, y-1/4*LeadingCoefficient(K!Coefficients(v)[4])/LeadingCoefficient(K!Coefficients(v)[5])*t*x]);
+
+[Degree(K!s) : s in Coefficients(v)];
+[Degree(K!s) : s in Coefficients(f)];
+
+test := &+[(LeadingCoefficient(K!Coefficients(v)[i]))*u1^(4-i+1)*u2^(i-1) : i in [1..#Coefficients(v)]];
+_, Mat := MinRedBinaryForm(test);
+
+v := v^ChangeRing(Mat, FieldOfFractions(K));
+f := f^ChangeRing(Mat, FieldOfFractions(K));
+
+[Degree(K!s) : s in Coefficients(v)];
+[Degree(K!s) : s in Coefficients(f)];
+
+mu := 2^104*3^50*5^9*7^3*13^3*17*19^3*23*29*31^3*53*73*131^2*449^3*479*733*1499*1621*1759*7369*15359^3*16987*24469*28597*30697*49939*775729*946669*1315537*5698547*90758513^3*2283532854066126377551224918229829624496014479835928894712729083193641329621464793815701189603533676574561405272154593836444680151975791/11^11;
+v := 1/mu^4*v;
+f := 1/mu^6*f;
+
+v := Evaluate(v, [x+y, y]);
+f := Evaluate(f, [x+y, y]);
+v := Evaluate(v, [x, 3/2*y]);
+f := Evaluate(f, [x, 3/2*y]);
+
+mu := 2*31/3^12;
+v := 1/mu^2*v;
+f := 1/mu^3*f;
+
+v;
+// 5*x^4 + 6*x^3*y + 2*t*x*y^3 + 3*t*y^4
+-3*f;
+// (-2*t + 9)*x^6 + 22*t*x^5*y + 21*t*x^4*y^2 + (-14*t^2 + 18*t)*x^3*y^3 + t^2*x^2*y^4 + 6*t^2*x*y^5 + (-3*t^3 + 6*t^2)*y^6

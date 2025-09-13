@@ -28,6 +28,6 @@ pic;
 
 
 // fiber at infinity
-f1 := Evaluate(f, [t^3, t*Y, t^5*T]);
-Terms(f1, t)[16] div t^15;
+f_inf := Evaluate(f, [t^3, t*Y, t^5*T]);
+f_inf := Evaluate(Terms(f_inf, t)[16] div t^15, [0, Y, T]);
 // -2Y^6 + 15Y^4T - 14Y^3 + 6YT + 3T^3 - 3
