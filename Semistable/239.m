@@ -20,6 +20,10 @@ f_0 := -1/3*Evaluate(S!(1/t^2*Evaluate(f_0, [t^2, Y, Y^3])), [0, Y, 0]);
 f_1 := Evaluate(f, [t^3+1, Y-1, t*T]) div t^3;
 ell := Evaluate(f_1, [0,Y,T]);
 Factorization((ell/3-T^3) div Y^3);
+
+R<x,y,z> := PolynomialRing(QQ, 3);
+C := Curve(Proj(R), 3*x^3+7*y*(y^2 - 20/7*y*z + 16/7*z^2));
+jInvariant(MinimalModel(EllipticCurve(C, C![0,0,1])));
 //Get an elliptic curve isomorphic to y^2=x^3-1 as a component
 f_1 := Evaluate(f_1, [t^3, t^3*Y, t^4*T]) div t^12;
 pic := Evaluate(f_1, [0, Y, T]);
