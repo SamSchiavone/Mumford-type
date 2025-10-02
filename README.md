@@ -1,6 +1,6 @@
 
 # Mumford-Type Shimura Curves Contained in the Torelli Locus
-This repository accompanies the paper *Mumford-Type Shimura Curves Contained in the Torelli Locus* by Thomas Bouchet, Jeroen Hanselman, Andreas Pieper and Sam Schiavone.  It contains files giving the equations of two families of abelian 4-folds of Mumford type, as well as computations that are part of the proofs. The paper can be found on arXiv: **insert link**
+This repository accompanies the paper *Mumford-Type Shimura Curves Contained in the Torelli Locus* by Thomas Bouchet, Jeroen Hanselman, Andreas Pieper and Sam Schiavone.  It contains files giving the equations of two families of abelian 4-folds of Mumford type, as well as computations that are part of the proofs. The paper can be found on arXiv: https://arxiv.org/abs/2510.00093.
 
 The Shimura curves were found by essentially interpolating CM points on the families, for which we were able to reconstruct the curves. This repository does **not** contain code to do this reconstruction. The code used for this can be found in:
 
