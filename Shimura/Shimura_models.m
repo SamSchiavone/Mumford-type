@@ -20,7 +20,7 @@ end function;
 function GetShimuraCurve239(param)
   Q, E := GenericShimuraCurve239();
   S<X, Y, Z, T> := PolynomialRing(Parent(param), 4);
-  return S!Q, Evaluate(E, [param, X, Y, Z, T]);
+  return Evaluate(Q, [param, X, Y, Z, T]), Evaluate(E, [param, X, Y, Z, T]);
 end function;
 
 // Shimura curves
