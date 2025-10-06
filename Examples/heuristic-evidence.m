@@ -71,6 +71,7 @@ for pair in polys do
   p, poly := Explode(pair);
   Append(~slopes, <p^2 mod 7, LowerSlopes(NewtonPolygon(poly,p))>);
 end for;
+slopes;
 
 S := [el[2] : el in polys];
 flag,T:=ComputeRootDatumOfMT(S);
@@ -93,6 +94,7 @@ for pair in polys do
   p, poly := Explode(pair);
   Append(~slopes, <p^2 mod 7, LowerSlopes(NewtonPolygon(poly,p))>);
 end for;
+slopes;
 
 S := [el[2] : el in polys];
 flag,T:=ComputeRootDatumOfMT(S);
