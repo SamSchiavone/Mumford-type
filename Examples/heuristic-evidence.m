@@ -57,7 +57,7 @@ T;
 // 2,3,7 family
 
 R<x> := PolynomialRing(QQ);
-// fiber above 0
+// fiber above 0 (see Semistable/237.m)
 f := x^9 + 16/3*x^7 + 32/3*x^5 - 256/21*x^3 + 256/81*x;
 C := HyperellipticCurve(f);
 
@@ -80,7 +80,7 @@ T;
 
 
 // 2,3,9 family
-// fiber above 0
+// fiber above 0 (see Semistable/239.m)
 f := x*(x^8 - 4*x^6 + 6*x^4 - 44/27*x^2 + 1);
 C := HyperellipticCurve(f);
 
