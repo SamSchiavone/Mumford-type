@@ -38,7 +38,7 @@ Here is a short overview of the files in our repository:
 
 ## Installation instructions
 
-First make sure you have the latest version of Magma installed. (The code was written for Magma V2.??).
+First make sure you have the latest version of Magma installed. (The code was written for Magma V2.28-7).
 
 Then use the command
 ```
