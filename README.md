@@ -25,7 +25,8 @@ Here is a short overview of the files in our repository:
 	- elliptic.m
 	- rational.m
 - **Semistable**
-	- **237.m** (Proposition 4.5 of [BHPS]) A script to determine the semistable reduction of the 2,3,7 family.
+	- **discriminant.m** A script to compute the discriminant of the families
+   	- **237.m** (Proposition 4.5 of [BHPS]) A script to determine the semistable reduction of the 2,3,7 family.
 	- **239.m** (Proposition 4.5 of [BHPS]) A script to determine the semistable reduction of the 2,3,9 family.
 - **Shimura**
 	- **Shimura_237_param.m** (Table 1 of [BHPS]) Putative CM points of the 237 family.
